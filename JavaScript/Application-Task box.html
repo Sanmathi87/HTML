@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Task Deletion Example</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 40px;
+  }
+
+  h2 {
+    color: #333;
+  }
+
+  li {
+    margin: 8px;
+    padding: 10px;
+    list-style: none;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  button {
+    padding: 8px 15px;
+    border: 1px solid #999;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  #output {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+</style>
+</head>
+<body>
+
+<h2>My Task List</h2>
+
+<button id="addButton" onclick="addTask()">Add New Task</button>
+
+<ul id="taskList">
+  <li>Finish homework <button onclick="deleteTask(this)">Delete</button></li>
+  <li>Clean the room <button onclick="deleteTask(this)">Delete</button></li>
+  <li>Buy groceries <button onclick="deleteTask(this)">Delete</button></li>
+</ul>
+
+<p id="output">Status will appear here</p>
+
+<script>
+function addTask() {
+  // Ask the user to type a new task
+  var newTask = prompt("Enter a new task:");
+
+  if (newTask == null || newTask == "") {
+    document.getElementById("output").innerHTML = "No task added.";
+  } else {
+    // Create a new list item
+    var li = document.createElement("li");
+    li.innerHTML = newTask + " <button onclick=\"deleteTask(this)\">Delete</button>";
+
+    // Add it to the task list
+    document.getElementById("taskList").appendChild(li);
+
+    document.getElementById("output").innerHTML = "Task added: " + newTask;
+  }
+}
+
+function deleteTask(button) {
+  // Get the task item (li) and its text
+  var taskItem = button.parentElement;
+  var taskName = taskItem.firstChild.textContent;
+
+  // 1. ALERT - Show a message
+  alert("You are about to delete: " + taskName);
+
+  // 2. CONFIRM - Ask yes or no
+  var isSure = confirm("Are you sure you want to delete this task?");
+
+  if (isSure == true) {
+    // 3. PROMPT - Ask for a reason
+    var reason = prompt("Why are you deleting this task?");
+
+    if (reason == null || reason == "") {
+      document.getElementById("output").innerHTML = "Deletion cancelled. No reason given.";
+    } else {
+      taskItem.remove();
+      document.getElementById("output").innerHTML = "Task deleted. Reason: " + reason;
+    }
+  } else {
+    document.getElementById("output").innerHTML = "Deletion cancelled.";
+  }
+}
+</script>
+
+</body>
+</html>
