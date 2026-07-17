@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Online Quiz</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #eef2f7;
+    text-align: center;
+    padding: 30px;
+  }
+  .box {
+    background: white;
+    max-width: 500px;
+    margin: auto;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #ccc;
+  }
+  input {
+    padding: 8px;
+    width: 80%;
+    margin-top: 10px;
+  }
+  button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 15px;
+  }
+  button:hover {
+    background-color: #45a049;
+  }
+  .option {
+    display: block;
+    width: 100%;
+    background: #f1f1f1;
+    color: black;
+    text-align: left;
+    margin: 8px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+  }
+  .option:hover {
+    background: #ddd;
+  }
+  .correct {
+    background: #a5d6a7 !important;
+  }
+  .wrong {
+    background: #ef9a9a !important;
+  }
+  #hidden {
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<!-- LOGIN PAGE -->
+<div class="box" id="loginPage">
+  <h2>Welcome to the Quiz</h2>
+  <p>Enter your name to start</p>
+  <input type="text" id="username" placeholder="Your name">
+  <br>
+  <button onclick="startQuiz()">Start Quiz</button>
+</div>
+
+<!-- QUIZ PAGE -->
+<div class="box" id="quizPage" style="display:none">
+  <h3 id="greet"></h3>
+  <h4 id="questionCount"></h4>
+  <p id="questionText"></p>
+  <div id="optionsBox"></div>
+  <button onclick="nextQuestion()">Next</button>
+</div>
+
+<!-- RESULT PAGE -->
+<div class="box" id="resultPage" style="display:none">
+  <h2>Quiz Finished!</h2>
+  <p id="scoreText"></p>
+  <button onclick="location.reload()">Play Again</button>
+</div>
+
+<script>
+  // 12 questions - each has a question, 4 options, and the correct answer index (0-3)
+  var questions = [
+    { q: "Which planet is known as the Red Planet?", options: ["Venus","Mars","Jupiter","Saturn"], answer: 1 },
+    { q: "Which is the largest ocean on Earth?", options: ["Atlantic","Indian","Pacific","Arctic"], answer: 2 },
+    { q: "In which year did World War II end?", options: ["1943","1944","1945","1946"], answer: 2 },
+    { q: "What does HTTP stand for?", options: ["HyperText Transfer Protocol","High Transfer Text Process","Home Tool Protocol","Hyperlink Transfer Program"], answer: 0 },
+    { q: "What is the wizarding school in Harry Potter?", options: ["Beauxbatons","Durmstrang","Hogwarts","Ilvermorny"], answer: 2 },
+    { q: "What is the square root of 144?", options: ["10","11","12","13"], answer: 2 },
+    { q: "Who wrote 'Pride and Prejudice'?", options: ["Emily Bronte","Jane Austen","Virginia Woolf","Mary Shelley"], answer: 1 },
+    { q: "How many players are on a football team on field?", options: ["9","10","11","12"], answer: 2 },
+    { q: "What is the chemical symbol for gold?", options: ["Gd","Go","Au","Ag"], answer: 2 },
+    { q: "Which is the smallest country in the world?", options: ["Monaco","San Marino","Vatican City","Liechtenstein"], answer: 2 },
+    { q: "Who is known as the father of computers?", options: ["Alan Turing","Charles Babbage","Ada Lovelace","Nikola Tesla"], answer: 1 },
+    { q: "What is the fastest land animal?", options: ["Lion","Pronghorn","Cheetah","Greyhound"], answer: 2 }
+  ];
+
+  var currentQuestion = 0;
+  var score = 0;
+  var playerName = "";
+  var answered = false;
+
+  function startQuiz() {
+    playerName = document.getElementById("username").value;
+    if (playerName == "") {
+      alert("Please enter your name");
+      return;
+    }
+    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("quizPage").style.display = "block";
+    document.getElementById("greet").innerHTML = "Good luck, " + playerName + "!";
+    showQuestion();
+  }
+
+  function showQuestion() {
+    answered = false;
+    var current = questions[currentQuestion];
+    document.getElementById("questionCount").innerHTML = "Question " + (currentQuestion + 1) + " of " + questions.length;
+    document.getElementById("questionText").innerHTML = current.q;
+
+    var optionsBox = document.getElementById("optionsBox");
+    optionsBox.innerHTML = "";
+
+    for (var i = 0; i < current.options.length; i++) {
+      var btn = document.createElement("button");
+      btn.className = "option";
+      btn.innerHTML = current.options[i];
+      btn.onclick = (function(index) {
+        return function() { checkAnswer(index); };
+      })(i);
+      optionsBox.appendChild(btn);
+    }
+  }
+
+  function checkAnswer(selected) {
+    if (answered) return;
+    answered = true;
+
+    var current = questions[currentQuestion];
+    var buttons = document.getElementsByClassName("option");
+
+    if (selected == current.answer) {
+      score++;
+      buttons[selected].classList.add("correct");
+    } else {
+      buttons[selected].classList.add("wrong");
+      buttons[current.answer].classList.add("correct");
+    }
+  }
+
+  function nextQuestion() {
+    if (!answered) {
+      alert("Please select an answer first");
+      return;
+    }
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
+      showQuestion();
+    } else {
+      showResult();
+    }
+  }
+
+  function showResult() {
+    document.getElementById("quizPage").style.display = "none";
+    document.getElementById("resultPage").style.display = "block";
+    document.getElementById("scoreText").innerHTML =
+      playerName + ", you scored " + score + " out of " + questions.length + "!";
+  }
+</script>
+
+</body>
+</html>
