@@ -1,100 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Task Deletion Example</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    padding: 40px;
-  }
-
-  h2 {
-    color: #333;
-  }
-
-  li {
-    margin: 8px;
-    padding: 10px;
-    list-style: none;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-
-  button {
-    padding: 8px 15px;
-    border: 1px solid #999;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-
-  #output {
-    margin-top: 20px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-</style>
+  <title>Task Deletion Confirmation & Feedback</title>
 </head>
 <body>
 
-<h2>My Task List</h2>
+  <h2>Task Deletion Confirmation & Feedback</h2>
+  <button onclick="deleteTask()">Delete Task</button>
 
-<button id="addButton" onclick="addTask()">Add New Task</button>
+  <script>
+    function deleteTask() {
 
-<ul id="taskList">
-  <li>Finish homework <button onclick="deleteTask(this)">Delete</button></li>
-  <li>Clean the room <button onclick="deleteTask(this)">Delete</button></li>
-  <li>Buy groceries <button onclick="deleteTask(this)">Delete</button></li>
-</ul>
+      // 1. Alert - inform user
+      alert("You are about to delete a task.");
 
-<p id="output">Status will appear here</p>
+      // 2. Confirm - ask yes/no
+      var isConfirmed = confirm("Are you sure you want to delete this task?");
 
-<script>
-function addTask() {
-  // Ask the user to type a new task
-  var newTask = prompt("Enter a new task:");
+      if (isConfirmed) {
 
-  if (newTask == null || newTask == "") {
-    document.getElementById("output").innerHTML = "No task added.";
-  } else {
-    // Create a new list item
-    var li = document.createElement("li");
-    li.innerHTML = newTask + " <button onclick=\"deleteTask(this)\">Delete</button>";
+        // 3. Prompt - ask for reason
+        var reason = prompt("Please enter the reason for deletion:");
 
-    // Add it to the task list
-    document.getElementById("taskList").appendChild(li);
+        if (reason == null || reason.trim() == "") {
+          alert("No reason entered. Task deletion cancelled.");
+        } else {
+          alert("Task deleted successfully.\nReason: " + reason);
+        }
 
-    document.getElementById("output").innerHTML = "Task added: " + newTask;
-  }
-}
-
-function deleteTask(button) {
-  // Get the task item (li) and its text
-  var taskItem = button.parentElement;
-  var taskName = taskItem.firstChild.textContent;
-
-  // 1. ALERT - Show a message
-  alert("You are about to delete: " + taskName);
-
-  // 2. CONFIRM - Ask yes or no
-  var isSure = confirm("Are you sure you want to delete this task?");
-
-  if (isSure == true) {
-    // 3. PROMPT - Ask for a reason
-    var reason = prompt("Why are you deleting this task?");
-
-    if (reason == null || reason == "") {
-      document.getElementById("output").innerHTML = "Deletion cancelled. No reason given.";
-    } else {
-      taskItem.remove();
-      document.getElementById("output").innerHTML = "Task deleted. Reason: " + reason;
+      } else {
+        alert("Task deletion cancelled by user.");
+      }
     }
-  } else {
-    document.getElementById("output").innerHTML = "Deletion cancelled.";
-  }
-}
-</script>
+  </script>
 
 </body>
 </html>
